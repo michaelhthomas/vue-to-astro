@@ -1,34 +1,54 @@
+<div align="center">
+  <a href="https://github.com/michaelhthomas/vue-to-astro">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./images/logo-dark.svg">
+      <img alt="Project Logo" src="./images/logo-light.svg" width="256" height="128">
+    </picture>
+  </a>
+
+  <h3 align="center">Vue to Astro Converter</h3>
+
+  <p align="center">
+    Automatically convert Vue template syntax to Astro.
+    <br />
+    <a href="https://michaelhthomas.github.io/vue-to-astro/">View Demo</a>
+    ·
+    <a href="https://github.com/michaelhthomas/vue-to-astro/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    ·
+    <a href="https://github.com/michaelhthomas/vue-to-astro/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+  </p>
+</div>
+
+A simple, browser-based conversion tool which transforms a Vue SFC's
+`<template>` block into valid Astro JSX. This makes the process of migrating
+content-heavy Vue sites to Astro much more pleasant.
+
 ## Usage
 
-Those templates dependencies are maintained via [pnpm](https://pnpm.io) via `pnpm up -Lri`.
-
-This is the reason you see a `pnpm-lock.yaml`. That being said, any package manager will work. This file can be safely be removed once you clone a template.
-
-```bash
-$ npm install # or pnpm install or yarn install
-```
-
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm run dev` or `npm start`
-
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br>
-
-### `npm run build`
-
-Builds the app for production to the `dist` folder.<br>
-It correctly bundles Solid in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+1. [Visit the demo](https://michaelhthomas.github.io/vue-to-astro/)
+1. Paste the code for a Vue component in the left pane
+1. See the equivalent Astro template in the right pane
 
 ## Deployment
 
-You can deploy the `dist` folder to any static host provider (netlify, surge, now, etc.)
+```bash
+bun install
+bun run build
+```
+
+You can deploy the produced `dist` folder to any static host provider (netlify, surge,
+now, etc.) or serve it using a web server.
+
+## Contributing
+
+1. Fork this repo
+1. Clone your fork
+1. Install dependencies --- `bun install`
+1. Start the development server --- `bun dev`
+1. Make some changes
+1. Submit your changes by pushing them to a well-named branch in your fork, then creating a PR
+
+## Acknowledgments
+
+- `@vue/compiler-sfc` --- Parsing and transforming Vue SFC syntax
+- `prettier-plugin-astro` --- Pretty-printing Astro syntax
