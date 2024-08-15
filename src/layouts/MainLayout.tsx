@@ -7,9 +7,7 @@ export const MainLayout: ParentComponent<{ title: string }> = (props) => {
 				<a class="px-4 text-xl font-semibold">{props.title}</a>
 			</div>
 
-			<div class="flex min-h-0 w-full flex-grow flex-col md:flex-row">
-				{props.children}
-			</div>
+			<div class="min-h-0 w-full flex-grow">{props.children}</div>
 		</div>
 	);
 };
