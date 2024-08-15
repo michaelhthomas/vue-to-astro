@@ -32,8 +32,8 @@ content-heavy Vue sites to Astro much more pleasant.
 ## Deployment
 
 ```bash
-bun install
-bun run build
+pnpm install
+pnpm run build
 ```
 
 You can deploy the produced `dist` folder to any static host provider (netlify, surge,
@@ -43,8 +43,8 @@ now, etc.) or serve it using a web server.
 
 1. Fork this repo
 1. Clone your fork
-1. Install dependencies --- `bun install`
-1. Start the development server --- `bun dev`
+1. Install dependencies --- `pnpm install`
+1. Start the development server --- `pnpm dev`
 1. Make some changes
 1. Submit your changes by pushing them to a well-named branch in your fork, then creating a PR
 

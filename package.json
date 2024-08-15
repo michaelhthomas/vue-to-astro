@@ -22,8 +22,10 @@
 		"vite-plugin-solid": "^2.8.2"
 	},
 	"dependencies": {
+		"@astrojs/compiler": "^2.10.3",
 		"@shikijs/monaco": "^1.13.0",
 		"@solid-primitives/storage": "^4.0.0",
+		"@vue/compiler-core": "^3.4.38",
 		"@vue/compiler-sfc": "^3.4.37",
 		"monaco-editor": "^0.50.0",
 		"prettier": "^3.3.3",
@@ -31,5 +33,10 @@
 		"shiki": "^1.13.0",
 		"solid-js": "^1.8.11",
 		"solid-monaco": "^0.2.0"
+	},
+	"pnpm": {
+		"overrides": {
+			"@astrojs/compiler": "^2.10.3"
+		}
 	}
 }
