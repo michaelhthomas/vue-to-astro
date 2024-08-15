@@ -1,12 +1,15 @@
 import {
 	type RootNode,
 	type TemplateChildNode,
+	type IfBranchNode,
 	type AttributeNode,
 	type DirectiveNode,
+	type ExpressionNode,
 	NodeTypes,
 	SourceLocation,
 } from "@vue/compiler-core";
 import { parse } from "@vue/compiler-sfc";
+import { transform, getBaseTransformPreset } from "@vue/compiler-core";
 import prettier from "prettier/standalone";
 import prettierPluginEstree from "prettier/plugins/estree";
 import prettierPluginTs from "prettier/plugins/typescript";
@@ -14,8 +17,6 @@ import prettierPluginHtml from "prettier/plugins/html";
 import * as prettierPluginAstro from "prettier-plugin-astro";
 import { initialize } from "@astrojs/compiler";
 import astroCompilerWasm from "@astrojs/compiler/astro.wasm?url";
-
-type NodeCondition = ["if", string] | ["else-if", string] | ["else"] | null;
 
 export async function convertVueToAstroJsx(
 	vueTemplate: string,
@@ -25,70 +26,24 @@ export async function convertVueToAstroJsx(
 	const templateAst = parsed.descriptor.template?.ast;
 	if (!templateAst) return "";
 
-	function toCondition(
-		attr: AttributeNode | DirectiveNode | undefined,
-	): NodeCondition {
-		if (attr == null || attr.type !== NodeTypes.DIRECTIVE) return null;
-		if (
-			attr.name === "if" &&
-			attr.exp &&
-			attr.exp.type === NodeTypes.SIMPLE_EXPRESSION
-		) {
-			return ["if", attr.exp.content];
-		} else if (
-			attr.name === "else-if" &&
-			attr.exp &&
-			attr.exp.type === NodeTypes.SIMPLE_EXPRESSION
-		) {
-			return ["else-if", attr.exp.content];
-		} else if (attr.name === "else") {
-			return ["else"];
-		}
-		return null;
-	}
+	const [nodeTransforms, directiveTransforms] = getBaseTransformPreset();
+	transform(templateAst, { nodeTransforms, directiveTransforms });
 
 	function printChildren(
 		children: {
 			value: string;
-			condition?: NodeCondition;
 			loc?: SourceLocation;
 		}[],
 	) {
 		let result = "";
 
 		for (let i = 0; i < children.length - 1; i++) {
-			const { value: child, condition, loc } = children[i];
+			const { value: child, loc } = children[i];
 			const nextChild = children[i + 1];
-			const nextChildCondition = nextChild.condition;
-			const nextChildConditionType = nextChildCondition
-				? nextChildCondition[0]
-				: null;
 
-			if (condition == null) {
-				result += child;
-			} else if (
-				condition[0] === "if" &&
-				nextChildConditionType === "else-if"
-			) {
-				result += `{(${condition[1]}) ? (${child}) : `;
-			} else if (condition[0] === "if" && nextChildConditionType === "else") {
-				result += `{(${condition[1]}) ? (${child}) : (${children[i + 1].value})}`;
-			} else if (
-				condition[0] === "else-if" &&
-				nextChildConditionType === "else-if"
-			) {
-				result += `(${condition[1]}) ? (${child}) : `;
-			} else if (
-				condition[0] === "else-if" &&
-				nextChildConditionType === "else"
-			) {
-				result += `(${condition[1]}) ? (${child}) : (${children[i + 1].value})}`;
-			} else if (condition[0] === "if") {
-				result += `{(${condition[1]}) && (${child})}`;
-			}
+			result += child;
 
 			// compute lines of whitespace
-			//
 			if (loc && nextChild.loc) {
 				const difference = nextChild.loc.start.line - loc.end.line;
 				result += "\n".repeat(difference);
@@ -97,51 +52,97 @@ export async function convertVueToAstroJsx(
 
 		const lastChild = children.at(-1);
 		if (!lastChild) {
-		} else if (lastChild.condition == null) {
+		} else {
 			result += lastChild.value;
-		} else if (lastChild.condition[0] === "if") {
-			result += `{(${lastChild.condition[1]}) && (${lastChild.value})}\n`;
 		}
 
 		return result;
 	}
 
+	function printExpression(node: ExpressionNode) {
+		if (node.type === NodeTypes.SIMPLE_EXPRESSION) return node.content;
+		else throw new Error("Complex expressions are not yet supported.");
+	}
+
 	// Function to recursively convert Vue AST to JSX
-	function convertNode(node: RootNode | TemplateChildNode): {
+	function convertNode(
+		node: RootNode | TemplateChildNode,
+		withinExpression = false,
+	): {
 		value: string;
-		condition?: NodeCondition;
 		loc?: SourceLocation;
 	} {
 		if (node.type === NodeTypes.ROOT) {
 			return {
-				value: printChildren(node.children.map(convertNode)),
+				value: printChildren(node.children.map((n) => convertNode(n))),
 				loc: node.loc,
 			};
 		} else if (node.type === NodeTypes.ELEMENT) {
 			const tagName = node.tag;
 			const attributes = node.props.map(convertAttribute).join(" ");
-			const children = printChildren(node.children.map(convertNode));
-
-			const condition = toCondition(
-				node.props.find((el) => toCondition(el) != null),
-			);
+			const children = printChildren(node.children.map((n) => convertNode(n)));
 
 			return {
 				value: node.isSelfClosing
 					? `<${tagName} ${attributes} />`
 					: `<${tagName} ${attributes}>${children}</${tagName}>`,
-				condition,
 				loc: node.loc,
 			};
 		} else if (node.type === NodeTypes.TEXT) {
 			return { value: node.content, loc: node.loc };
+		} else if (node.type === NodeTypes.TEXT_CALL) {
+			return convertNode(node.content);
 		} else if (node.type === NodeTypes.COMMENT) {
 			return { value: `{/* ${node.content} */}`, loc: node.loc };
-		} else if (
-			node.type === NodeTypes.INTERPOLATION &&
-			node.content.type === NodeTypes.SIMPLE_EXPRESSION
-		) {
-			return { value: `{${node.content.content}}`, loc: node.loc };
+		} else if (node.type === NodeTypes.INTERPOLATION) {
+			return {
+				value: `{${printExpression(node.content)}}`,
+				loc: node.loc,
+			};
+		} else if (node.type === NodeTypes.IF) {
+			const printBranch = (branch: IfBranchNode) =>
+				branch.children.length > 1
+					? `<>${printChildren(branch.children.map((n) => convertNode(n)))}</>`
+					: printChildren(branch.children.map((n) => convertNode(n, true)));
+
+			// single conditional
+			if (node.branches.length === 1) {
+				const branch = node.branches[0];
+				if (!branch.condition)
+					throw new Error("Conditional missing condition.");
+
+				const result = `(${printExpression(branch.condition)}) && (${printBranch(branch)})`;
+				return {
+					value: withinExpression ? result : `{${result}}`,
+					loc: node.loc,
+				};
+			} else if (node.branches.length > 1) {
+				if (node.branches.filter((n) => n.condition == null).length > 1)
+					throw new Error(
+						"A 'v-else' must be preceeded by a 'v-if' or 'v-else-if'.",
+					);
+
+				const parts = node.branches.map((branch) =>
+					branch.condition
+						? `(${printExpression(branch.condition)}) ? (${printBranch(branch)})`
+						: `(${printBranch(branch)})`,
+				);
+
+				// chain ends in an else-if
+				if (node.branches.at(-1)?.condition != null) {
+					parts.push("null");
+				}
+
+				const result = parts.join(" : ");
+
+				return {
+					value: withinExpression ? result : `{${result}}`,
+					loc: {
+						...node.loc,
+						end: node.branches.at(-1)?.loc.end ?? node.loc.end,
+					},
+				};
+			}
 		}
 
 		throw new Error(`Node type ${node.type} not implemented`);
