@@ -1,20 +1,22 @@
-import { createSignal, type Component } from "solid-js";
+import { createSignal, ErrorBoundary, type Component } from "solid-js";
 import { MainLayout } from "./layouts/MainLayout";
+import { CodeEditor } from "./components/CodeEditor";
+import { AstroConverter } from "./components/AstroConverter";
+import { ErrorViewer } from "./components/ErrorViewer";
 
 const App: Component = () => {
-	const [template, setTemplate] = createSignal<string>();
+	const [template, setTemplate] = createSignal("");
 
 	return (
 		<MainLayout title="Vue to Astro Converter">
 			<div class="flex flex-shrink-0 flex-grow-0 basis-1/2 flex-col gap-2">
-				<textarea
-					class="w-full flex-grow resize-none p-2"
-					onInput={(e) => setTemplate(e.target.value)}
-				/>
+				<CodeEditor language="vue" value={template()} onChange={setTemplate} />
 			</div>
 
 			<div class="flex min-h-0 min-w-0 flex-shrink-0 flex-grow-0 basis-1/2 flex-col gap-2">
-				<div class="min-h-0 flex-grow">{template()}</div>
+				<ErrorBoundary fallback={(err) => <ErrorViewer error={err} />}>
+					<AstroConverter template={template()} />
+				</ErrorBoundary>
 			</div>
 		</MainLayout>
 	);
