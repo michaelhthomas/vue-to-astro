@@ -22,6 +22,7 @@
 	},
 	"dependencies": {
 		"@shikijs/monaco": "^1.13.0",
+		"@solid-primitives/storage": "^4.0.0",
 		"@vue/compiler-sfc": "^3.4.37",
 		"monaco-editor": "^0.50.0",
 		"prettier": "^3.3.3",

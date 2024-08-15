@@ -3,9 +3,10 @@ import { MainLayout } from "./layouts/MainLayout";
 import { CodeEditor } from "./components/CodeEditor";
 import { AstroConverter } from "./components/AstroConverter";
 import { ErrorViewer } from "./components/ErrorViewer";
+import { makePersisted } from "@solid-primitives/storage";
 
 const App: Component = () => {
-	const [template, setTemplate] = createSignal("");
+	const [template, setTemplate] = makePersisted(createSignal(""));
 
 	return (
 		<MainLayout title="Vue to Astro Converter">
