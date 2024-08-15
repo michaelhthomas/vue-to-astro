@@ -44,7 +44,7 @@ export const CodeEditor: Component<CodeEditorProps> = (props) => {
 				language={props.language}
 				value={props.value}
 				onMount={handleMount}
-				options={{ readOnly: props.readonly }}
+				options={{ readOnly: props.readonly, fontSize: 14 }}
 				onChange={(value) => props.onChange && props.onChange(value)}
 			/>
 		</Show>
