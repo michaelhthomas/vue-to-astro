@@ -143,6 +143,27 @@ export async function convertVueToAstroJsx(
 					},
 				};
 			}
+		} else if (node.type === NodeTypes.FOR) {
+			const rawSource = printExpression(node.source);
+			// handle numeric ranges
+			// https://vuejs.org/guide/essentials/list#v-for-with-a-range
+			const source = /^\d*$/.test(rawSource)
+				? `Array.from(Array(${rawSource}), (_, i) => i+1)`
+				: rawSource;
+			const mapArgs = [node.valueAlias, node.keyAlias]
+				.filter((n) => n != null)
+				.map(printExpression)
+				.join(", ");
+			const children =
+				node.children.length > 1
+					? `<>${printChildren(node.children.map((n) => convertNode(n)))}</>`
+					: printChildren(node.children.map((n) => convertNode(n, true)));
+
+			const result = `(${source}).map((${mapArgs}) => (${children}))`;
+			return {
+				value: withinExpression ? result : `{${result}}`,
+				loc: node.codegenNode?.loc ?? node.loc,
+			};
 		}
 
 		throw new Error(`Node type ${node.type} not implemented`);
