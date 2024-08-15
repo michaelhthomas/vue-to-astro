@@ -90,8 +90,8 @@ export async function convertVueToAstroJsx(
 			// compute lines of whitespace
 			//
 			if (loc && nextChild.loc) {
-				const difference = nextChild.loc.start.line - loc.end.line - 1;
-				result += "\n".repeat(difference > 0 ? difference : 0);
+				const difference = nextChild.loc.start.line - loc.end.line;
+				result += "\n".repeat(difference);
 			}
 		}
 
@@ -128,15 +128,15 @@ export async function convertVueToAstroJsx(
 
 			return {
 				value: node.isSelfClosing
-					? `<${tagName} ${attributes} />\n`
-					: `<${tagName} ${attributes}>${children}</${tagName}>\n`,
+					? `<${tagName} ${attributes} />`
+					: `<${tagName} ${attributes}>${children}</${tagName}>`,
 				condition,
 				loc: node.loc,
 			};
 		} else if (node.type === NodeTypes.TEXT) {
 			return { value: node.content, loc: node.loc };
 		} else if (node.type === NodeTypes.COMMENT) {
-			return { value: `{/* ${node.content} */}\n`, loc: node.loc };
+			return { value: `{/* ${node.content} */}`, loc: node.loc };
 		} else if (
 			node.type === NodeTypes.INTERPOLATION &&
 			node.content.type === NodeTypes.SIMPLE_EXPRESSION
