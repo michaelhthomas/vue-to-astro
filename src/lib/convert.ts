@@ -51,8 +51,7 @@ export async function convertVueToAstroJsx(
 		}
 
 		const lastChild = children.at(-1);
-		if (!lastChild) {
-		} else {
+		if (lastChild) {
 			result += lastChild.value;
 		}
 

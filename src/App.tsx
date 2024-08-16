@@ -1,4 +1,4 @@
-import { createSignal, ErrorBoundary, onMount, type Component } from "solid-js";
+import { createSignal, ErrorBoundary, type Component } from "solid-js";
 import { MainLayout } from "./layouts/MainLayout";
 import { CodeEditor } from "./components/CodeEditor";
 import { AstroConverter } from "./components/AstroConverter";
