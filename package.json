@@ -11,6 +11,7 @@
 	},
 	"license": "MIT",
 	"devDependencies": {
+		"@rollup/plugin-replace": "^5.0.7",
 		"autoprefixer": "^10.4.20",
 		"daisyui": "^4.12.10",
 		"postcss": "^8.4.41",
