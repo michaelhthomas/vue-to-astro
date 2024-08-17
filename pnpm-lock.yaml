@@ -34,7 +34,7 @@ importers:
         version: 3.3.3
       prettier-plugin-astro:
         specifier: github:michaelhthomas/prettier-plugin-astro#browser
-        version: https://codeload.github.com/michaelhthomas/prettier-plugin-astro/tar.gz/a87a4a59585799891be53a8817c8473f65d3c342
+        version: https://codeload.github.com/michaelhthomas/prettier-plugin-astro/tar.gz/0306a01eab6c96def5dd1e5a51d2551d1a7fdba6
       shiki:
         specifier: ^1.13.0
         version: 1.13.0
@@ -48,6 +48,9 @@ importers:
       '@eslint/js':
         specifier: ^9.9.0
         version: 9.9.0
+      '@monaco-editor/loader':
+        specifier: ^1.4.0
+        version: 1.4.0(monaco-editor@0.50.0)
       '@rollup/plugin-replace':
         specifier: ^5.0.7
         version: 5.0.7(rollup@4.20.0)
@@ -71,7 +74,7 @@ importers:
         version: 8.4.41
       prettier-plugin-tailwindcss:
         specifier: ^0.6.6
-        version: 0.6.6(prettier-plugin-astro@https://codeload.github.com/michaelhthomas/prettier-plugin-astro/tar.gz/a87a4a59585799891be53a8817c8473f65d3c342)(prettier@3.3.3)
+        version: 0.6.6(prettier-plugin-astro@https://codeload.github.com/michaelhthomas/prettier-plugin-astro/tar.gz/0306a01eab6c96def5dd1e5a51d2551d1a7fdba6)(prettier@3.3.3)
       solid-devtools:
         specifier: ^0.29.2
         version: 0.29.3(solid-js@1.8.21)(vite@5.4.1)
@@ -1394,8 +1397,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier-plugin-astro@https://codeload.github.com/michaelhthomas/prettier-plugin-astro/tar.gz/a87a4a59585799891be53a8817c8473f65d3c342:
-    resolution: {tarball: https://codeload.github.com/michaelhthomas/prettier-plugin-astro/tar.gz/a87a4a59585799891be53a8817c8473f65d3c342}
+  prettier-plugin-astro@https://codeload.github.com/michaelhthomas/prettier-plugin-astro/tar.gz/0306a01eab6c96def5dd1e5a51d2551d1a7fdba6:
+    resolution: {tarball: https://codeload.github.com/michaelhthomas/prettier-plugin-astro/tar.gz/0306a01eab6c96def5dd1e5a51d2551d1a7fdba6}
     version: 0.14.1
     engines: {node: ^14.15.0 || >=16.0.0}
 
@@ -3055,17 +3058,17 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-astro@https://codeload.github.com/michaelhthomas/prettier-plugin-astro/tar.gz/a87a4a59585799891be53a8817c8473f65d3c342:
+  prettier-plugin-astro@https://codeload.github.com/michaelhthomas/prettier-plugin-astro/tar.gz/0306a01eab6c96def5dd1e5a51d2551d1a7fdba6:
     dependencies:
       '@astrojs/compiler': 2.10.3
       prettier: 3.3.3
       sass-formatter: 0.7.9
 
-  prettier-plugin-tailwindcss@0.6.6(prettier-plugin-astro@https://codeload.github.com/michaelhthomas/prettier-plugin-astro/tar.gz/a87a4a59585799891be53a8817c8473f65d3c342)(prettier@3.3.3):
+  prettier-plugin-tailwindcss@0.6.6(prettier-plugin-astro@https://codeload.github.com/michaelhthomas/prettier-plugin-astro/tar.gz/0306a01eab6c96def5dd1e5a51d2551d1a7fdba6)(prettier@3.3.3):
     dependencies:
       prettier: 3.3.3
     optionalDependencies:
-      prettier-plugin-astro: https://codeload.github.com/michaelhthomas/prettier-plugin-astro/tar.gz/a87a4a59585799891be53a8817c8473f65d3c342
+      prettier-plugin-astro: https://codeload.github.com/michaelhthomas/prettier-plugin-astro/tar.gz/0306a01eab6c96def5dd1e5a51d2551d1a7fdba6
 
   prettier@3.3.3: {}
 
