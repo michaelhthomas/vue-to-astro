@@ -41,6 +41,7 @@
 		"prettier": "^3.3.3",
 		"prettier-plugin-astro": "github:michaelhthomas/prettier-plugin-astro#browser",
 		"shiki": "^1.13.0",
+		"solid-icons": "^1.1.0",
 		"solid-js": "^1.8.11",
 		"solid-monaco": "^0.2.0"
 	},
