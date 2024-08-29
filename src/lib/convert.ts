@@ -27,7 +27,11 @@ export async function convertVueToAstroJsx(
 	if (!templateAst) return "";
 
 	const [nodeTransforms, directiveTransforms] = getBaseTransformPreset();
-	transform(templateAst, { nodeTransforms, directiveTransforms });
+	transform(templateAst, {
+		// Hack to remove the textTransform function, since these transforms aren't exported
+		nodeTransforms: nodeTransforms.slice(0, -1),
+		directiveTransforms,
+	});
 
 	function printChildren(
 		children: {
