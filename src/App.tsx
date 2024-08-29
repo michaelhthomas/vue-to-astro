@@ -4,9 +4,10 @@ import { CodeEditor } from "./components/CodeEditor";
 import { AstroConverter } from "./components/AstroConverter";
 import { ErrorViewer } from "./components/ErrorViewer";
 import { makePersisted } from "@solid-primitives/storage";
+import ExampleText from "./Example.vue?raw";
 
 const App: Component = () => {
-	const [template, setTemplate] = makePersisted(createSignal(""));
+	const [template, setTemplate] = makePersisted(createSignal(ExampleText));
 	const [dragging, setDragging] = createSignal(false);
 	const [lBoxWidth, setLBoxWidth] = createSignal<number>();
 
